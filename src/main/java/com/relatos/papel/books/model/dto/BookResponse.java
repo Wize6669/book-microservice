@@ -10,6 +10,7 @@ import java.util.Date;
 @Builder
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookResponse {
+    private Long id;
 
     private String title;
 

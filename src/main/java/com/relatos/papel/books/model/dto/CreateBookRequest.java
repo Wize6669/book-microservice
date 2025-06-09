@@ -36,6 +36,8 @@ public class CreateBookRequest {
 
     private String image;
 
+    private Boolean status;
+
     @Min(value = 0, message = "Discount cannot be negative")
     @Max(value = 100, message = "Discount cannot exceed 100")
     private Integer discount;

@@ -22,6 +22,7 @@ public class Book {
     @Column(name = "published_date")
     private Date publishedDate;
     private String description;
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double rating;
     private BigDecimal price;
     @Column(columnDefinition = "INTEGER DEFAULT 0")

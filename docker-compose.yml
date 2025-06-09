@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:9.3-oracle
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: book_service
+      MYSQL_USER: book_service
+      MYSQL_PASSWORD: book_service*
+      MYSQL_ROOT_PASSWORD: some_root_password*
+    deploy:
+      resources:
+        limits:
+          memory: 900M
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "book_service", "-pbook_service*" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - relatos-papel
+
+  books-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - relatos-papel
+
+networks:
+  relatos-papel:
+    name: relatos-papel
+    driver: bridge
+
+volumes:
+  db_mysql:
+    driver: local

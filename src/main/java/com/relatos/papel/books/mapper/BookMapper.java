@@ -11,7 +11,7 @@ import static com.relatos.papel.books.utils.Constants.INACTIVE_STATUS;
 @Mapper(componentModel = "spring", uses = CategoryMapper.class)
 public interface BookMapper {
 
-    @Mapping(target = "status", expression = "java(mapStatus(book)")
+    @Mapping(target = "status", expression = "java(mapStatus(book))")
     BookResponse toBookResponse(Book book);
 
     default String mapStatus(Book book) {
