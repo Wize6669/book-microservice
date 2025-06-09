@@ -31,16 +31,6 @@ public class BookController {
         return bookService.findByCriteria(criteria);
     }
 
-    @GetMapping("/{id}")
-    public BookResponse findById(@PathVariable Long id) {
-        return bookService.findById(id);
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public List<BookResponse> findByCategory(@PathVariable Long categoryId) {
-        return bookService.findAllByCategoryId(categoryId);
-    }
-
     @PostMapping
     public ResponseEntity<BookResponse> save(@Valid @RequestBody CreateBookRequest request) {
         BookResponse bookResponse = bookService.save(request);
