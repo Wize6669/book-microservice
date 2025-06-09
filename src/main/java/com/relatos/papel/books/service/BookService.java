@@ -1,9 +1,11 @@
 package com.relatos.papel.books.service;
 
+import com.relatos.papel.books.model.criteria.BookCriteria;
 import com.relatos.papel.books.model.dto.BookResponse;
 import com.relatos.papel.books.model.dto.CreateBookRequest;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookService {
     BookResponse findById(Long id);
@@ -12,9 +14,7 @@ public interface BookService {
 
     List<BookResponse> findAllByCategoryId(Long categoryId);
 
-    List<BookResponse> findAllByStatus(Boolean status);
-
-    BookResponse findBookByIsbn(String isbn);
+    List<BookResponse> findByCriteria(BookCriteria criteria);
 
     BookResponse save(CreateBookRequest request);
 

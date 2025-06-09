@@ -1,15 +1,19 @@
 package com.relatos.papel.books.controller;
 
+import com.relatos.papel.books.model.criteria.BookCriteria;
 import com.relatos.papel.books.model.dto.BookResponse;
 import com.relatos.papel.books.model.dto.CreateBookRequest;
 import com.relatos.papel.books.service.BookService;
+import com.relatos.papel.books.utils.FilterUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +22,13 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public List<BookResponse> findAll() {
-        return bookService.findAll();
+    public List<BookResponse> findAll(@RequestParam MultiValueMap<String, String> params) {
+        if (params.isEmpty() || !hasValidFilters(params)) {
+            return bookService.findAll();
+        }
+
+        BookCriteria criteria = FilterUtils.parseFilters(params);
+        return bookService.findByCriteria(criteria);
     }
 
     @GetMapping("/{id}")
@@ -46,5 +55,19 @@ public class BookController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         bookService.deleteById(id);
+    }
+
+    private boolean hasValidFilters(MultiValueMap<String, String> params) {
+        Set<String> validFilterKeys = Set.of(
+                "id", "title", "author", "isbn",
+                "publishedDateFrom", "publishedDateTo",
+                "ratingFrom", "ratingTo",
+                "priceFrom", "priceTo",
+                "discountFrom", "discountTo",
+                "status", "categoryId", "categoryName"
+        );
+
+        return params.keySet().stream()
+                .anyMatch(validFilterKeys::contains);
     }
 }

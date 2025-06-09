@@ -3,6 +3,8 @@ package com.relatos.papel.books.service;
 import com.relatos.papel.books.exceptions.book.BookNotFoundException;
 import com.relatos.papel.books.exceptions.category.CategoryNotFoundException;
 import com.relatos.papel.books.mapper.BookMapper;
+import com.relatos.papel.books.model.criteria.BookCriteria;
+import com.relatos.papel.books.model.criteria.BookSpecification;
 import com.relatos.papel.books.model.dto.BookResponse;
 import com.relatos.papel.books.model.dto.CreateBookRequest;
 import com.relatos.papel.books.model.entity.Book;
@@ -10,9 +12,11 @@ import com.relatos.papel.books.model.entity.Category;
 import com.relatos.papel.books.repository.BookRepository;
 import com.relatos.papel.books.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,13 +56,12 @@ public class BookServiceImp implements BookService {
     }
 
     @Override
-    public List<BookResponse> findAllByStatus(Boolean status) {
-        return List.of();
-    }
-
-    @Override
-    public BookResponse findBookByIsbn(String isbn) {
-        return null;
+    public List<BookResponse> findByCriteria(BookCriteria criteria) {
+        Specification<Book> specification = BookSpecification.filterByCriteria(criteria);
+        return bookRepository.findAll(specification)
+                .stream()
+                .map(bookMapper::toBookResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
