@@ -31,6 +31,11 @@ public class BookController {
         return bookService.findByCriteria(criteria);
     }
 
+    @GetMapping("/{id}")
+    public BookResponse findById(@PathVariable Long id) {
+        return bookService.findById(id);
+    }
+
     @PostMapping
     public ResponseEntity<BookResponse> save(@Valid @RequestBody CreateBookRequest request) {
         BookResponse bookResponse = bookService.save(request);
